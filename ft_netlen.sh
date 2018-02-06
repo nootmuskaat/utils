@@ -13,4 +13,10 @@ test "$TEXT" == "10.10.0.0 - 10.10.255.255" || echo "Bad output: \"$TEXT\""
 TEXT=$(./netlen.py 10.10.10.10 24)
 test "$TEXT" == "10.10.10.0 - 10.10.10.255" || echo "Bad output: \"$TEXT\""
 
+TEXT=$(./netlen.py 10.10.10.10 33)
+test "$TEXT" == "ERROR: mask not within range" || echo "Bad output: \"$TEXT\""
+
+TEXT=$(./netlen.py 10.10.10.299 24)
+test "$TEXT" == "ERROR: invalid address element '299'" || echo "Bad output: \"$TEXT\""
+
 exit 0

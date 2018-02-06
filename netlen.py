@@ -31,10 +31,10 @@ def ipaddr(address):
     # raises ValueError if int not found
     addr_bytes = [int(byte) for byte in address.split(".")]
     if len(addr_bytes) != IPV4_ADDR_LEN:
-        raise ValueError("Invalid address length")
+        raise ValueError("invalid address length")
     for byte in addr_bytes:
         if byte < BYTE_MIN_SIZE or byte > BYTE_MAX_SIZE:
-            raise ValueError("Invalid address element '{}'".format(byte))
+            raise ValueError("invalid address element '{}'".format(byte))
 
     base = 0
     for byte in addr_bytes[:-1]:
@@ -47,9 +47,9 @@ def ipaddr(address):
 def to_address(addr_int):
     """Convert from address' numerical value to human readable form"""
     if not isinstance(addr_int, int):
-        raise TypeError("Input must be of type 'int'")
+        raise TypeError("input must be of type 'int'")
     if addr_int < IPV4_MIN_VAL or addr_int > IPV4_MAX_VAL:
-        raise ValueError("Input not within IPv4 address range")
+        raise ValueError("input not within IPv4 address range")
 
     addr_bytes = []
     for _ in range(4):
@@ -86,9 +86,14 @@ def _cliargs():
 def main():
     """Run with CLI parameters"""
     addr, nmask = _cliargs()
-    print("{} - {}".format(
-        lower(addr, nmask), upper(addr, nmask)
-        ))
+    try:
+        print("{} - {}".format(
+            lower(addr, nmask), upper(addr, nmask)
+            ))
+    except (ValueError, TypeError) as exc:
+        print("ERROR: {}".format(exc))
+        return 1
+
     return 0
 
 if __name__ == "__main__":
