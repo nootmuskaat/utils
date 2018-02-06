@@ -5,7 +5,6 @@ import unittest
 
 import netlen
 
-
 FOUR_BYTE_MIN = (2**0) - 1
 FOUR_BYTE_MAX = (2**32) - 1
 
@@ -63,14 +62,16 @@ class TestIPAddress(unittest.TestCase):
         self.assertEqual(netlen.to_address(0b00001010000010100000101000001010),
                 "10.10.10.10")
 
-
-"""
 class TestMinMax(unittest.TestCase):
     def test_min(self):
         self.assertEqual(netlen.lower("10.10.10.10", 24), "10.10.10.0")
         self.assertEqual(netlen.lower("10.10.10.10", 30), "10.10.10.8")
         self.assertEqual(netlen.lower("10.10.10.10", 16), "10.10.0.0")
-"""
+
+    def test_max(self):
+        self.assertEqual(netlen.upper("10.10.10.10", 24), "10.10.10.255")
+        self.assertEqual(netlen.upper("10.10.10.10", 30), "10.10.10.11")
+        self.assertEqual(netlen.upper("10.10.10.10", 16), "10.10.255.255")
 
 if __name__ == "__main__":
     unittest.main()

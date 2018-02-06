@@ -58,11 +58,18 @@ def to_address(addr_int):
 
     return ".".join([str(byte) for byte in addr_bytes[::-1]])
 
-
-
-def lower(address_str, mask):
+def lower(address, mask):
     """Return lower bound of the given subnet"""
     address = ipaddr(address)
     mask = netmask(mask)
+    return to_address(address & mask)
 
-    laddr = address & mask
+def upper(address, mask):
+    """Return upper bound of the given subnet"""
+    ipv4_max = 32
+    tail = ipv4_max - mask
+
+    address = ipaddr(address)
+    mask = netmask(mask)
+
+    return to_address((address & mask) + (2**tail - 1))
