@@ -1,6 +1,8 @@
+#!/usr/bin/python
 """
 Basic utility for seeing address for a given IPv4 address and netmask
 """
+import argparse
 
 BYTE_SIZE = 8
 BYTE_MIN_SIZE = 0
@@ -70,3 +72,24 @@ def upper(address, mask):
     mask = netmask(mask)
 
     return to_address((address & mask) + (2**tail - 1))
+
+def _cliargs():
+    """Return CLI args as tuple (address, netmask)"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("address", type=str,
+            help="An IPv4 address, eg 127.0.0.1")
+    parser.add_argument("netmask", type=int,
+            help="An IPv4 CIDR prefix, eg 24 for /24 (255.255.255.0)")
+    args = parser.parse_args()
+    return (args.address, args.netmask)
+
+def main():
+    """Run with CLI parameters"""
+    addr, nmask = _cliargs()
+    print("{} - {}".format(
+        lower(addr, nmask), upper(addr, nmask)
+        ))
+    return 0
+
+if __name__ == "__main__":
+    main()
