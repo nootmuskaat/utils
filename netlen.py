@@ -39,3 +39,30 @@ def ipaddr(address):
     base += addr_bytes[-1]
 
     return base
+
+def to_address(addr_int):
+    """Convert from address' numerical value to human readable form"""
+    ipv4_min, ipv4_max = 0, 2**32 - 1
+    if not isinstance(addr_int, int):
+        raise TypeError("Input must be of type 'int'")
+    if addr_int < ipv4_min or addr_int > ipv4_max:
+        raise ValueError("Input not within IPv4 address range")
+
+    byte = 2**8 - 1
+    byte_len = 8
+
+    addr_bytes = []
+    for _ in range(4):
+        addr_bytes.append(addr_int & byte)
+        addr_int >>= byte_len
+
+    return ".".join([str(byte) for byte in addr_bytes[::-1]])
+
+
+
+def lower(address_str, mask):
+    """Return lower bound of the given subnet"""
+    address = ipaddr(address)
+    mask = netmask(mask)
+
+    laddr = address & mask
