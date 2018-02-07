@@ -19,4 +19,6 @@ test "$TEXT" == "ERROR: mask not within range" || echo "Bad output: \"$TEXT\""
 TEXT=$(./netlen.py 10.10.10.299 24)
 test "$TEXT" == "ERROR: invalid address element '299'" || echo "Bad output: \"$TEXT\""
 
+echo "OK"
+
 exit 0
