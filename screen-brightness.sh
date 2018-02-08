@@ -20,18 +20,17 @@ fi
 
 BACKLIGHT_DIR=/sys/class/backlight/intel_backlight
 if [ ! -d $BACKLIGHT_DIR ]; then 
-    logger "ERROR! $BACKLIGHT_DIR not found!"
+    logger "ERROR: $BACKLIGHT_DIR not found!"
     exit 404
 fi
 
-# This block should be adjusted to fit the max brightness
-# of whatever the laptop model in question
+## Set increment to ~2% total brightness, minimum value of 1
 MAX_BRIGHTNESS=$(cat $BACKLIGHT_DIR/max_brightness)
-if [ $MAX_BRIGHTNESS -ne 96000 ]; then
-    logger "ERROR! Max Brightness != 96000 found"
-    exit 96
+INCR=$(expr 2 \* $MAX_BRIGHTNESS \/ 100)
+if [ $INCR -eq 0 ]; then
+    INCR=1
 fi
-INCR=960 # 1% total brightness
+
 
 CURRENT=$(cat $BACKLIGHT_DIR/brightness)
 NEW=$(expr $CURRENT $DIRECTION $INCR)
@@ -46,5 +45,5 @@ function set_brightness() {
 }
 
 if [ $NEW -ge 0 -a $NEW -le $MAX_BRIGHTNESS ]; then
-    set_brightness $NEW || logger "Failed to adjust screen brightness" && exit 1
+    set_brightness $NEW || logger "Failed to adjust screen brightness"
 fi
