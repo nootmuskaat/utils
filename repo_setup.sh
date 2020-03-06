@@ -26,23 +26,21 @@ function parse_path() {
 }
 
 function main() {
-    if ! validate_args "$@" ; then
-        exit 1
-    fi
+    validate_args "$@" || return 1
 
     local -r url="$1"
     local -r path="$(parse_path ${url})"
     local -r full_path="${GITLAB_HOME}/${path}"
     if [[ -d "${full_path}/.git" ]] ; then
         echo "The directory ${full_path} already contains a repository !"
-        exit 1
+        return 1
     fi
 
     mkdir -p "${full_path}" && 
         cd "${full_path}" &&
         git init &&
         git remote add origin "$url" ||
-        exit 1
+        return 1
     echo "Repository '${url}' setup at '${full_path}'"
     echo 'A `git fetch` is required before work can begin'
 }
